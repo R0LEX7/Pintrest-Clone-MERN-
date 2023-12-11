@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const cors = require("cors");
 const expressSession = require("express-session");
@@ -57,4 +58,4 @@ app.use("/post", postRouter);
 //   }
 // });
 
-app.listen(2000);
+app.listen(process.env.PORT || 3000);
