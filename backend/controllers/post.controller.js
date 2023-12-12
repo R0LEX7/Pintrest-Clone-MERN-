@@ -47,8 +47,9 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await postModal.find().populate("userId");
-    console.log("found" , posts)
+    const posts = await postModal
+      .find()
+      .populate([{ path: "userId" }, { path: 'comments.userId' }]);
     return res.status(200).json({
       success: true,
       posts,
@@ -62,4 +63,70 @@ const getAllPosts = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getAllPosts };
+const handleLike = async (req, res) => {
+  try {
+    const { postId } = req.body;
+    const username = req.session.passport.user;
+
+    const post = await postModal.findById(postId);
+
+    if (post) {
+      const likeArray = post.likes;
+
+      if (likeArray.includes(username)) {
+        let ind = likeArray.indexOf(username);
+        likeArray.splice(ind, 1);
+      } else {
+        likeArray.push(username);
+      }
+
+      await post.save();
+      return res.status(200).json({
+        message: "post liked",
+        post: post.postText,
+        likeArray: post.likes,
+      });
+    } else {
+      return res.status(404).json({
+        message: "Post not found",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "error liking post", error: error });
+  }
+};
+const handleComment = async (req, res) => {
+  try {
+    const { postId, text } = req.body;
+
+    const curr_User = await userModal.findOne({
+      username: req.session.passport.user,
+    });
+
+    const post = await postModal.findById(postId);
+
+    if (post) {
+      post.comments.push({
+        userId: curr_User._id,
+        commentText: text,
+      });
+
+      await post.save();
+      return res.status(200).json({
+        message: "Commented on post",
+        post: post.postText,
+        comments: post.comments,
+      });
+    } else {
+      return res.status(404).json({
+        message: "Post not found",
+      });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "error commenting on  post", error: error });
+  }
+};
+
+module.exports = { createPost, getAllPosts, handleLike, handleComment };
