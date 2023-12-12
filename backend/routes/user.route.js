@@ -13,15 +13,16 @@ const {
   logoutUser,
   isLoggedIn,
   loginUser,
-  getProfileData
+  getProfileData,
+  updateUser,
 } = require("../controllers/user.controller");
 
 passport.use(new localStrategy(userModel.authenticate()));
 
-router.post("/create",upload.single("profilePic") , createUser);
+router.post("/create", upload.single("profilePic"), createUser);
 
-router.get("/get_user" , isLoggedIn ,  getUserDetails)
-router.get("/profile" , isLoggedIn ,  getProfileData)
+router.get("/get_user", isLoggedIn, getUserDetails);
+router.get("/profile", isLoggedIn, getProfileData);
 
 router.post("/login", loginUser);
 
@@ -29,8 +30,13 @@ router.get("/logout", logoutUser);
 
 router.get("/isAuthenticated", isLoggedIn);
 
-router.get("/profile", isLoggedIn, (req, res) => {
-  res.send("Welcome to pintrest");
-});
+router.post(
+  "/update",
+  isLoggedIn,
+  upload.single("updateProfilePic"),
+  updateUser
+);
+
+
 
 module.exports = router;

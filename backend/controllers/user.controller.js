@@ -3,10 +3,6 @@ const userModal = require("../models/user.model");
 const validator = require("validator");
 const { uploadOnCloudinary } = require("../services/cloudinary.js");
 
-// const localStrategy = require("passport-local");
-
-// passport.use(new localStrategy(userModal.authenticate()));
-
 const createUser = async (req, res) => {
   try {
     const { username, email, fullName, password } = req.body;
@@ -48,7 +44,6 @@ const createUser = async (req, res) => {
 
     await userModal.register(userData, password).then(() => {
       passport.authenticate("local")(req, res, () => {
-        
         res.status(201).json({ message: ` Welcome ${lowerUsername}` });
       });
     });
@@ -122,6 +117,53 @@ const getProfileData = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const { username, fullName } = req.body;
+    const oldUser = await userModal.findOne({
+      username: req.session.passport.user,
+    });
+    const lowerUsername = username ? username.toLowerCase() : oldUser.username;
+    const lowerFullName = fullName ? fullName.toLowerCase() : oldUser.fullName;
+
+    const updatedUserData = {};
+    console.log(req.file);
+    if (req.file) {
+      const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
+      if (!cloudinaryResponse) {
+        return res
+          .status(500)
+          .json({ message: "Failed to upload to cloudinary" });
+      }
+      updatedUserData.profilePic = cloudinaryResponse.secure_url;
+    }
+
+    updatedUserData.username = lowerUsername;
+    updatedUserData.fullName = lowerFullName;
+    const updatedUser = await userModal.findOneAndUpdate(
+      { username: req.session.passport.user },
+      {
+        $set: updatedUserData,
+      },
+      {
+        new: true,
+      }
+    );
+    console.log("check user data: " + updatedUserData);
+    console.log("updated user data: " + updatedUser);
+    res
+      .status(200)
+      .json({
+        message: "Updated successfully",
+        user: updatedUser,
+        "check user data: ": updatedUserData,
+      });
+  } catch (error) {
+    console.log("Internal Server Error", error);
+    res.status(500).json({ message: "Internal Server Error", error: error });
+  }
+};
+
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
@@ -138,4 +180,5 @@ module.exports = {
   isLoggedIn,
   loginUser,
   getProfileData,
+  updateUser,
 };
