@@ -1,0 +1,185 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Gilroy-Bold", sans-serif;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100vh;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+ul {
+  list-style: none;
+}
+
+/* Utilities */
+.card::after,
+.card img {
+  border-radius: 50%;
+  width: 100px;
+  object-fit: cover;
+  position: relative;
+}
+
+.edit-icon {
+  width: 30px;
+  height: 30px;
+  padding: 4px;
+  background-color: #e00912;
+  border-radius: 50%;
+  border: #df0812 solid 1px;
+  position: absolute;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  top: 100px;
+  left: 90px;
+}
+body,
+.card,
+.stats {
+  display: flex;
+}
+
+.profilePic {
+  border-radius: 50%;
+}
+
+.card {
+  padding: 1.5rem;
+  border-radius: 10px;
+  background-color: white;
+  min-height: 220px;
+  min-width: 475px;
+  max-width: 500px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+  margin: 1rem;
+  position: relative;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+}
+.card::before {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  top: -0.7rem;
+  left: -0.7rem;
+}
+.card::after {
+  height: 15rem;
+  width: 15rem;
+  background-color: #e85960;
+  top: -8rem;
+  right: -8rem;
+  box-shadow: 2rem 6rem 0 -3rem #fff;
+}
+
+.img {
+  height: 100px;
+  width: 100px;
+  z-index: 12;
+}
+
+.card img {
+  /* width: 10rem; */
+  min-width: 80px;
+  height: 100px;
+  box-shadow: 0 0 0 5px #fff;
+}
+
+.infos {
+  margin-left: 1.5rem;
+  width: 52%;
+}
+
+.name {
+  margin-bottom: 1rem;
+}
+.name h2 {
+  font-size: 1.3rem;
+}
+.name h4 {
+  margin-left: 4.5rem;
+
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.text {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.stats {
+  margin-bottom: 1rem;
+}
+.stats {
+  min-width: 5rem;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.stats h3 {
+  font-size: 0.99rem;
+}
+.stats h3 span {
+  font-size: 0.75rem;
+}
+
+.links {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.links button {
+  min-width: 120px;
+  padding: 0.5rem;
+  border: 1px solid;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s linear;
+}
+.links .follow,
+.links .view:hover {
+  background-color: #f30d19;
+  color: #fff;
+}
+.links .view,
+.links .follow:hover {
+  background-color: #df0812;
+  color: #fff;
+}
+
+@media screen and (max-width: 450px) {
+  .card {
+    display: block;
+    min-width: 270px;
+    height: auto;
+  }
+  .infos {
+    margin-left: 0;
+    margin-top: 3.2rem;
+    width: auto;
+  }
+  .links button {
+    min-width: 100px;
+  }
+}
