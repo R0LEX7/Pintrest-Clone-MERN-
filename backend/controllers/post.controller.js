@@ -6,15 +6,16 @@ const { uploadOnCloudinary } = require("../services/cloudinary.js");
 const createPost = async (req, res) => {
   try {
     // if file not found
-    if (!req.file) {
-      return res.status(400).json({ error: "file is required" });
-    }
     console.log(req.file);
+    if (!req.file) {
+      return res.status(400).json({ message: "file is required" });
+    }
     const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
 
     // if cloudinary response found
     if (cloudinaryResponse) {
       const { postText } = req.body;
+      if(!postText || postText.trim().length === 0) return res.status(400).json({ message: "Caption is required" });
       const user = await userModal.findOne({
         username: req.session.passport.user,
       });
@@ -49,15 +50,16 @@ const getAllPosts = async (req, res) => {
   try {
     const posts = await postModal
       .find()
-      .populate([{ path: "userId" }, { path: 'comments.userId' }]);
+      .populate([{ path: "userId" }, { path: "comments.userId" }]);
     return res.status(200).json({
       success: true,
       posts,
     });
   } catch (error) {
     console.log("Internal error: " + error);
-    return res.status().json({
+    return res.status(400).json({
       success: false,
+      message : "Internal error ",
       error: error.message,
     });
   }
@@ -103,15 +105,23 @@ const handleComment = async (req, res) => {
       username: req.session.passport.user,
     });
 
-    const post = await postModal.findById(postId);
+    let post = await postModal.findById(postId);
 
     if (post) {
-      post.comments.push({
+      const commentArr = post.comments;
+      commentArr.push({
         userId: curr_User._id,
         commentText: text,
       });
 
       await post.save();
+      post = await postModal
+        .findById(postId)
+        .populate([
+          { path: "userId" },
+          { path: "comments" },
+          { path: "comments.userId" },
+        ]);
       return res.status(200).json({
         message: "Commented on post",
         post: post.postText,
@@ -129,4 +139,120 @@ const handleComment = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getAllPosts, handleLike, handleComment };
+const isLiked = async (req, res) => {
+  try {
+    const { postId, userId } = req.body;
+    const post = await postModal.findById(postId);
+    const user = await userModal.findById(userId);
+
+    if (post.likes.includes(user.username)) {
+      return res.status(200).json({
+        message: "liked by user",
+        post: post.postText,
+        isLiked: true,
+      });
+    } else {
+      return res.status(200).json({
+        message: "not liked by user",
+        post: post.postText,
+        isLiked: false,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal error",
+      error: error,
+    });
+  }
+};
+
+const getSinglePost = async (req, res) => {
+  try {
+    const { id } = req.query; // Use req.query.id to get the id parameter from the URL
+
+    console.log("ID from frontend:", id);
+
+    console.log(id);
+    console.log("req.body", req.body);
+
+    const post = await postModal
+      .findById(id)
+      .populate([
+        { path: "userId" },
+        { path: "comments" },
+        { path: "comments.userId" },
+      ]);
+    console.log(post);
+    if (post) {
+      return res
+        .status(200)
+        .json({ success: true, message: "post found", data: post });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "post not found", id: id });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+const deletePost = async (req, res) => {
+  try {
+    const { postId } = req.query;
+
+    const curr_User = await userModal.findOne({
+      username: req.session.passport.user,
+    });
+    console.log("username :" + req.session.passport.username);
+    console.log("curr" + curr_User.username);
+    const post = await postModal.findById(postId).populate("userId");
+    if (!post)
+      return res.status(404).json({
+        success: false,
+        message: "post not found",
+      });
+    console.log(post);
+    if (curr_User._id.equals(post.userId._id)) {
+      const deletePost = await postModal.findByIdAndDelete(postId);
+
+      if (deletePost)
+        return res.status(200).json({
+          success: true,
+          message: "deleted Successfully",
+          data: deletePost,
+        });
+
+      return res.status(404).json({
+        success: false,
+        message: "post not found",
+        data: deletePost,
+      });
+    } else {
+      return res
+        .status(403)
+        .json({ message: "You do not have permission to delete" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(501)
+      .json({ success: false, message: "Internal server error", error: error });
+  }
+};
+
+module.exports = {
+  createPost,
+  getAllPosts,
+  handleLike,
+  handleComment,
+  isLiked,
+  getSinglePost,
+  deletePost,
+};

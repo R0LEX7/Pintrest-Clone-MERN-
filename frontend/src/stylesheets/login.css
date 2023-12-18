@@ -1,7 +1,12 @@
-body {
+.main {
     background-color: #dadada;
     /* font-family: "Gilroy"; */
-    padding: 0 10px;
+    height: 100%;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black
   }
 
 
@@ -11,25 +16,15 @@ body {
     width: 480px;
     max-height: 625px;
     min-height: 530px;
-    /* height: 70vh; */
-    position: absolute;
-    margin: auto;
-    top: 0;
-    /* top : 20% for mobile */
-    left: 0;
-    bottom: 0;
-    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 10px;
     box-shadow: 2px 2px 3px -1px rgba(0, 0, 0, 0.5);
   }
   .content {
     width: 56%;
-    position: absolute;
-    margin: auto;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    
     text-align: center;
 
   }

@@ -8,9 +8,12 @@ const createUser = async (req, res) => {
     const { username, email, fullName, password } = req.body;
 
     // Convert fields to lowercase
-    const lowerUsername = username.toLowerCase();
+    const lowerUsername = username.trim().toLowerCase();
     const lowerEmail = email.toLowerCase();
     const lowerFullName = fullName.toLowerCase();
+
+    if (lowerUsername.length === 0)
+      return res.status(400).json({ error: "Invalid Username" });
 
     if (!validator.isEmail(lowerEmail)) {
       return res.status(400).json({ error: "Invalid email address" });
@@ -32,7 +35,7 @@ const createUser = async (req, res) => {
     if (!cloudinaryResponse) {
       return res
         .status(500)
-        .json({ message: "Failed to upload to Cloudinary" });
+        .json({ error: "Failed to upload to Cloudinary" });
     }
 
     const userData = new userModal({
@@ -95,7 +98,9 @@ const getAllUser = async (req, res) => {
 const getUserDetails = async (req, res) => {
   try {
     const { userId } = req.body;
-    const user = await userModal.findById({ _id: userId }).populate("posts");
+    const user = await userModal
+      .findById({ _id: userId })
+      .populate([{ path: "posts" }, { path: "posts.userId" }]);
     res.status(200).json({
       user: user,
     });
@@ -107,9 +112,20 @@ const getUserDetails = async (req, res) => {
 
 const getProfileData = async (req, res) => {
   try {
-    const user = await userModal.findOne({
-      username: req.session.passport.user,
-    });
+    const user = await userModal
+  .findOne({
+    username: req.session.passport.user,
+  })
+  .populate({ path: "posts" })
+  .populate({ path: "posts.userId" })
+  .populate({ path: "posts.comments" })
+  .populate({
+    path: "posts",
+    populate: {
+      path: "userId comments.userId",
+    },
+  });
+
     res.status(200).json({ user: user });
   } catch (error) {
     console.log("Internal Server Error", error);
@@ -151,13 +167,11 @@ const updateUser = async (req, res) => {
     );
     console.log("check user data: " + updatedUserData);
     console.log("updated user data: " + updatedUser);
-    res
-      .status(200)
-      .json({
-        message: "Updated successfully",
-        user: updatedUser,
-        "check user data: ": updatedUserData,
-      });
+    res.status(200).json({
+      message: "Updated successfully",
+      user: updatedUser,
+      "check user data: ": updatedUserData,
+    });
   } catch (error) {
     console.log("Internal Server Error", error);
     res.status(500).json({ message: "Internal Server Error", error: error });

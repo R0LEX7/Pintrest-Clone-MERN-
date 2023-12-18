@@ -1,19 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;700&display=swap");
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-body {
-  font-family: "Gilroy-Bold", sans-serif;
-  /* display: flex; */
-  align-items: center;
-  justify-content: center;
 
-  min-height: 100vh;
-}
 img {
   max-width: 100%;
   display: block;
@@ -45,7 +32,7 @@ ul {
   top: 100px;
   left: 90px;
 }
-body,
+
 .card,
 .stats {
   display: flex;
@@ -63,7 +50,7 @@ body,
   min-width: 475px;
   max-width: 500px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
-  margin: 1rem;
+  margin: 3rem 1rem 0 1rem;
   position: relative;
   transform-style: preserve-3d;
   overflow: hidden;
@@ -131,9 +118,9 @@ body,
   margin-bottom: 1rem;
 }
 .stats {
-  min-width: 5rem;
+  min-width: 7rem;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 .stats h3 {
   font-size: 0.99rem;
@@ -176,7 +163,7 @@ body,
   }
   .infos {
     margin-left: 0;
-    margin-top: 3.2rem;
+    margin-top: .8rem;
     width: auto;
   }
   .links button {

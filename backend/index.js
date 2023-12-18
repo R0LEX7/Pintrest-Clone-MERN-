@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const expressSession = require("express-session");
@@ -11,6 +11,14 @@ const { connect } = require("./connection.js");
 const User = require("./models/user.model.js");
 const upload = require("./services/multer.js");
 const { uploadOnCloudinary } = require("./services/cloudinary.js");
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 connect();
 
@@ -48,14 +56,15 @@ const postRouter = require("./routes/post.route.js");
 
 app.use("/post", postRouter);
 
-// app.post("/upload", upload.single("file"), (req, res, next) => {
-//   if (req.file) {
-//     console.log(req.file);
-//     const response = uploadOnCloudinary(req.file.path);
-//     res.status(200).json({ file: " milii" , response: response});
-//   } else {
-//     res.status(400).json({ file: "not milii" });
-//   }
-// });
+io.on("connection", (socket) => {
+  socket.on("like", ({ postId, likeArray }) => {
+    console.log("new like connection", likeArray);
+    // Emit the "isLiked" event only to clients interested in this post
+    socket.broadcast.to(postId).emit("isLiked", likeArray);
+  });
+});
 
-app.listen(process.env.PORT || 3000);
+
+server.listen(process.env.PORT || 3000, () => {
+  console.log(`server listening on port http://localhost:${process.env.PORT}`);
+});

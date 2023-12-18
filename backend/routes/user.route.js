@@ -22,7 +22,7 @@ passport.use(new localStrategy(userModel.authenticate()));
 router.post("/create", upload.single("profilePic"), createUser);
 
 router.get("/get_user", isLoggedIn, getUserDetails);
-router.get("/profile", isLoggedIn, getProfileData);
+router.get("/profile", getProfileData);
 
 router.post("/login", loginUser);
 

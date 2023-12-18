@@ -1,23 +1,30 @@
-import { useEffect, useState, createContext } from "react";
+
 import { Header, Login } from "./index.js";
 import { Outlet } from "react-router-dom";
-import userContext from "./Context/user.context.js";
+import {AuthProvider} from "./Context/UserContext.jsx";
+import useUserProfile from "./Custom Hooks/useUserProfile.jsx";
+import {User} from "@nextui-org/react";
+import SingleCard from "./components/SingleCard.jsx";
+import {toast , Toaster} from "react-hot-toast"
 
-import axios from "axios";
+
+
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const { loading, error, user } = useUserProfile();
+
+
+  
 
   return (
     <>
-      <userContext.Provider value={{ user, setUser }}>
+    <Toaster/>
+      <AuthProvider>
         <Header />
-        {user && <h1>{user.username}</h1>}
-      {/* {!authenticated && <Login />} */}
         <main>
           <Outlet />
         </main>
-      </userContext.Provider>
+      </AuthProvider>
     </>
   );
 };
