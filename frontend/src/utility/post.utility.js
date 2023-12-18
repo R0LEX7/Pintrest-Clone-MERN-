@@ -4,7 +4,7 @@ import { getProfile } from "./authentication.utility";
 // const post_url = String(import.meta.env.VITE_AUTH_URI);
 
 let ApiService = axios.create({
-  baseURL: "http://localhost:2000/post",
+  baseURL: "https://pintrestclone-vqp3.onrender.com/post",
   withCredentials: true,
   headers: {
     Accept: "application/json",

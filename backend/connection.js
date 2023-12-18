@@ -6,7 +6,7 @@ const atlasUri = process.env.URI
 
 const connect = () => {
     try {
-        mongoose.connect(uri);
+        mongoose.connect(atlasUri);
         console.log("Connected to MongoDB");
     } catch (error) {
         console.log("error connecting with database")
