@@ -25,8 +25,23 @@ app.use(cookieParser());
 app.enable("trust proxy");
 passport.use(new localStrategy(User.authenticate()));
 // passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.serializeUser((user, done) => {
+  done(null, user._id);
+});
+passport.deserializeUser((id, done) => {
+  console.log("Deserializing user with ID:", id);
+
+  User.findById(id, (err, user) => {
+    if (err) {
+      console.error("Error finding user:", err);
+      return done(err, null);
+    }
+
+    console.log("User found:", user);
+    done(null, user);
+  });
+});
+
 // middlewares
 app.use(
   cors({
