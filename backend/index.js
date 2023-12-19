@@ -40,7 +40,7 @@ app.use(
     saveUninitialized: true,
     proxy: true, // add this line
     cookie: {
-      secure: true,
+      secure: false,
       maxAge: 3600000,
       store: MongoStore.create({ mongoUrl: process.env.URI }),
     },
