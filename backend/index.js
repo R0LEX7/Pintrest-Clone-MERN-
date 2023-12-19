@@ -9,8 +9,7 @@ const userRouter = require("./routes/user.route.js");
 const app = express();
 const { connect } = require("./connection.js");
 const User = require("./models/user.model.js");
-const upload = require("./services/multer.js");
-const { uploadOnCloudinary } = require("./services/cloudinary.js");
+const MongoStore = require("connect-mongo");
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -22,6 +21,8 @@ const io = require("socket.io")(server, {
 
 connect();
 
+app.use(cookieParser());
+app.enable("trust proxy");
 passport.use(new localStrategy(User.authenticate()));
 // passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
@@ -45,9 +46,14 @@ app.use((req, res, next) => {
 
 app.use(
   expressSession({
-    resave: false,
-    saveUninitialized: false,
-    secret: "R0LEX",
+    secret: "foo",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      secure: true,
+      maxAge: 3600000,
+      store: MongoStore.create({ url: process.env.URI }),
+    },
   })
 );
 app.use(passport.initialize());
