@@ -36,7 +36,7 @@ app.enable("trust proxy" , 1);
 app.use(
   expressSession({
     secret: "foo",
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     proxy: true, // add this line
     cookie: {
