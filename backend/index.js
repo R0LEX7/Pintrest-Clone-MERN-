@@ -52,7 +52,7 @@ app.use(
     cookie: {
       secure: true,
       maxAge: 3600000,
-      store: MongoStore.create({ url: process.env.URI }),
+      store: MongoStore.create({ mongoUrl: process.env.URI }),
     },
   })
 );
