@@ -19,29 +19,6 @@ const io = require("socket.io")(server, {
   },
 });
 
-connect();
-
-app.use(cookieParser());
-app.enable("trust proxy");
-passport.use(new localStrategy(User.authenticate()));
-// passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-passport.deserializeUser((id, done) => {
-  console.log("Deserializing user with ID:", id);
-
-  User.findById(id, (err, user) => {
-    if (err) {
-      console.error("Error finding user:", err);
-      return done(err, null);
-    }
-
-    console.log("User found:", user);
-    done(null, user);
-  });
-});
-
 // middlewares
 app.use(
   cors({
@@ -50,14 +27,11 @@ app.use(
   })
 );
 
-// Example in Express.js
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
-  next();
-});
+app.use(express.json());
+connect();
+
+app.use(cookieParser());
+app.enable("trust proxy" , 1);
 
 app.use(
   expressSession({
@@ -71,11 +45,42 @@ app.use(
       store: MongoStore.create({ mongoUrl: process.env.URI }),
     },
   })
-);
-app.use(passport.initialize());
-app.use(passport.session());
+  );
+  
+  // Example in Express.js
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
+    next();
+  });
+  
+  
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-app.use(express.json());
+passport.use(new localStrategy(User.authenticate()));
+// passport.use(new localStrategy(User.authenticate()));
+
+
+passport.serializeUser((user, done) => {
+  return done(null, user._id);
+});
+passport.deserializeUser((id, done) => {
+  console.log("Deserializing user with ID:", id);
+
+  User.findById(id, (err, user) => {
+    if (err) {
+      console.error("Error finding user:", err);
+      return done(err, null);
+    }
+
+    console.log("User found:", user);
+    return done(null, user);
+  });
+});
+
 app.get("/", (req, res) => {
   res.send("hyy");
 });
