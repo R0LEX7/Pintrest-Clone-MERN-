@@ -36,7 +36,7 @@ const Header = () => {
   };
 
   return (
-    <Navbar maxWidth="100%" className="lg:px-4 gap-8 shadow-md justify-between">
+    <Navbar maxWidth="full" className="lg:px-4 gap-8 shadow-md justify-between">
       <Toaster/>
       <NavbarContent>
         <NavbarContent>

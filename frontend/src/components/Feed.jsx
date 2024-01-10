@@ -6,6 +6,7 @@ import FeedCard from "./FeedCard";
 import { useCookies } from "react-cookie";
 
 import { getData } from "../utility/post.utility.js";
+import Loader from "./Loader/Loader.jsx";
 
 const breakPointColumnObj = {
   default: 3,
@@ -16,14 +17,18 @@ const breakPointColumnObj = {
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [cookies] = useCookies([]);
+  const [loading, setLoading] = useState(false);
 
   const getAllPosts = async () => {
     try {
+      setLoading(true);
       const AllPosts = await getData(cookies?.uid);
       setPosts(AllPosts);
     } catch (error) {
       console.log(error);
       toast(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,11 +37,17 @@ const Feed = () => {
   }, []);
 
   return (
-    <div className="gallery">
-      <Toaster />
-      {posts.length > 0 &&
-        posts.map((item) => <FeedCard key={item?._id} props={item} />)}
-    </div>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="gallery">
+          <Toaster />
+          {posts.length > 0 &&
+            posts.map((item) => <FeedCard key={item?._id} props={item} />)}
+        </div>
+      )}
+    </>
   );
 };
 
