@@ -12,17 +12,23 @@ const userRouter = require("./routes/user.route.js");
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested, Content-Type, Accept Authorization"
-  );
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+
   if (req.method === "OPTIONS") {
     res.header("Access-Control-Allow-Methods", "POST, PUT, PATCH, GET, DELETE");
     return res.status(200).json({});
   }
   next();
 });
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+
 
 app.use(express.json());
 connect();
