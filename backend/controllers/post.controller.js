@@ -17,7 +17,7 @@ const createPost = async (req, res) => {
       const { postText } = req.body;
       if(!postText || postText.trim().length === 0) return res.status(400).json({ message: "Caption is required" });
       const user = await userModal.findOne({
-        username: req.session.passport.user,
+        username: req.username,
       });
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -68,7 +68,7 @@ const getAllPosts = async (req, res) => {
 const handleLike = async (req, res) => {
   try {
     const { postId } = req.body;
-    const username = req.session.passport.user;
+    const username = req.username;
 
     const post = await postModal.findById(postId);
 
@@ -102,7 +102,7 @@ const handleComment = async (req, res) => {
     const { postId, text } = req.body;
 
     const curr_User = await userModal.findOne({
-      username: req.session.passport.user,
+      username: req.username,
     });
 
     let post = await postModal.findById(postId);
@@ -208,9 +208,9 @@ const deletePost = async (req, res) => {
     const { postId } = req.query;
 
     const curr_User = await userModal.findOne({
-      username: req.session.passport.user,
+      username: req.username,
     });
-    console.log("username :" + req.session.passport.username);
+    console.log("username :" + req.usernamename);
     console.log("curr" + curr_User.username);
     const post = await postModal.findById(postId).populate("userId");
     if (!post)

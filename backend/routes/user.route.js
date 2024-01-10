@@ -10,7 +10,7 @@ const upload = require("../services/multer");
 const {
   createUser,
   getUserDetails,
-  logoutUser,
+
   isLoggedIn,
   loginUser,
   getProfileData,
@@ -26,7 +26,7 @@ router.get("/profile", isLoggedIn, getProfileData);
 
 router.post("/login", loginUser);
 
-router.get("/logout", logoutUser);
+
 
 router.get("/isAuthenticated", isLoggedIn);
 
