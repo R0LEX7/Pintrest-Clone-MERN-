@@ -12,7 +12,7 @@ const userRouter = require("./routes/user.route.js");
 
 
 const corsOptions = {
-  origin: "*",
+  origin: String(process.env.FRONTEND_URI),
   methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
   credentials: true,
   optionsSuccessStatus: 204,
