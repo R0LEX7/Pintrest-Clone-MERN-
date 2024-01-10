@@ -13,11 +13,11 @@ import { toast, Toaster } from "react-hot-toast";
 import { deletePost } from "../utility/post.utility";
 import { useNavigation } from "react-router-dom";
 import { useAuth } from "../Context/UserContext";
-import { useCookie } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 const DeletePost = ({ post }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [cookies, _] = useCookie([]);
+  const [cookies, _] = useCookies([]);
   const navigate = useNavigation();
 
   const { user } = useAuth();
