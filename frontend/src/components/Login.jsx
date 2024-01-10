@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
+
 import { useAuth } from "../Context/UserContext";
 import { loginUser } from "../utility/authentication.utility";
-import "../stylesheets/Login.css";
+import "../stylesheets/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import Loader from "./Loader/Loader";
