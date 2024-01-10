@@ -4,7 +4,6 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "../utility/authentication.utility";
 import { handleLike } from "../utility/post.utility";
-import { io } from "socket.io-client";
 import { useCookies } from "react-cookie";
 import { Card, CardFooter, Image, Button, Avatar } from "@nextui-org/react";
 import { Modal, useDisclosure, ModalContent } from "@nextui-org/react";

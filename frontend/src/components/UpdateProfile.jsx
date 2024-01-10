@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../stylesheets/Login.css";
+import "../stylesheets/login.css";
 import { updateUser } from "../utility/authentication.utility";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
