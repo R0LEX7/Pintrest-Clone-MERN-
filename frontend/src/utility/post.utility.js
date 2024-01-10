@@ -3,8 +3,10 @@ import { getProfile } from "./authentication.utility";
 
 // const post_url = String(import.meta.env.VITE_AUTH_URI);
 
+// import axios from "axios";
+
 let ApiService = axios.create({
-  baseURL: "https://pintrestclone-vqp3.onrender.com/post",
+  baseURL: "https://pintrestclone-vqp3.onrender.com",
   withCredentials: true,
   headers: {
     Accept: "application/json",
@@ -21,15 +23,17 @@ const configFile = {
 
 export const getData = async () => {
   try {
-    const response = await ApiService.get("/all_posts");
-
+    const response = await ApiService.get("/post/all_posts");
     return response?.data?.posts || null;
   } catch (error) {
-    console.log(error);
-    console.log(error?.response?.data?.message);
+    console.error(error);
     throw error?.response?.data?.message || error.message;
   }
 };
+
+
+// ... (other functions remain unchanged)
+
 
 export const handleLike = async (postId) => {
   try {
@@ -84,11 +88,7 @@ export const deletePost = async (postId) => {
 
 export const createPost = async (formData) => {
   try {
-    const response = await ApiService.post(
-      "/create",
-      formData,
-      configFile
-    );
+    const response = await ApiService.post("/post/create", formData, configFile);
     return response;
   } catch (error) {
     console.log(error);

@@ -15,12 +15,15 @@ let ApiService = axios.create({
 
 export const loginUser = async (username, password) => {
   try {
-    const response = await ApiService.post("/login", {
-      username: username.toLowerCase(),
-      password,
-    });
-
-    return response.data; 
+    const response = await axios.post(
+      "https://pintrestclone-vqp3.onrender.com/user/login",
+      {
+        username: username.toLowerCase(),
+        password,
+      }
+    );
+    console.log(response);
+    return response.data;
   } catch (error) {
     console.log(error);
     throw error.response?.data?.message || "An error occurred";
@@ -36,9 +39,13 @@ export const registerUser = async (userData, selectedImage) => {
     formData.append("password", userData.password);
     formData.append("profilePic", selectedImage);
 
-    const response = await ApiService.post("/create", formData, {
-      withCredentials: true,
-    });
+    const response = await axios.post(
+      "https://pintrestclone-vqp3.onrender.com/user/create",
+      formData,
+      {
+        withCredentials: true,
+      }
+    );
     await loginUser(userData.username, userData.password);
 
     // Handle success, e.g., redirect to the login page
@@ -72,9 +79,12 @@ export const getProfile = async () => {
 
 export const logout = async () => {
   try {
-    const logoutuser = await ApiService.get("/logout", {
-      withCredentials: true,
-    });
+    const logoutuser = await axios.get(
+      "https://pintrestclone-vqp3.onrender.com/user/logout",
+      {
+        withCredentials: true,
+      }
+    );
   } catch (error) {
     console.log(error);
   }

@@ -2,13 +2,20 @@ const passport = require("passport");
 const userModal = require("../models/user.model");
 const validator = require("validator");
 const { uploadOnCloudinary } = require("../services/cloudinary.js");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const createUser = async (req, res) => {
   try {
-    const { username, email, fullName, password } = req.body;
+    const { username, email, fullName, password, profilePic } = req.body;
 
     // Convert fields to lowercase
     const lowerUsername = username.trim().toLowerCase();
+    const user = await userModal.findOne({ username: lowerUsername });
+
+    if (user) {
+      return res.json(user);
+    }
     const lowerEmail = email.toLowerCase();
     const lowerFullName = fullName.toLowerCase();
 
@@ -26,6 +33,9 @@ const createUser = async (req, res) => {
         .json({ error: "Password must be at least 8 characters long" });
     }
 
+    /**
+     *
+
     if (!req.file) {
       return res.status(400).json({ error: "File is required" });
     }
@@ -33,23 +43,26 @@ const createUser = async (req, res) => {
     const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
 
     if (!cloudinaryResponse) {
-      return res
-        .status(500)
-        .json({ error: "Failed to upload to Cloudinary" });
+      return res.status(500).json({ error: "Failed to upload to Cloudinary" });
     }
+    */
+
+    // <TODO>image uploading</TODO>;
+
+    const hashedPassword = bcrypt.hash(password, 10);
+
 
     const userData = new userModal({
       username: lowerUsername,
       email: lowerEmail,
       fullName: lowerFullName,
-      profilePic: cloudinaryResponse.secure_url,
+      profilePic: profilePic,
+      password: hashedPassword,
     });
+    await userData.save();
+    // const token = jwt.sign({ userId: userData._id }, "your-secret-key");
 
-    await userModal.register(userData, password).then(() => {
-      passport.authenticate("local")(req, res, () => {
-        res.status(201).json({ message: ` Welcome ${lowerUsername}` });
-      });
-    });
+    res.status(201).json({ message: `Welcome ${lowerUsername}`, userData });
   } catch (error) {
     console.log("Internal Server Error", error);
     res.status(500).json({ message: "Internal Server Error", error: error });
@@ -57,23 +70,9 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+  const {username , password} = req.body;
 
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
 
-    req.logIn(user, (err) => {
-      if (err) {
-        return res.status(500).json({ message: "Internal Server Error" });
-      }
-
-      return res.json({ message: "Login successful", user });
-    });
-  })(req, res, next);
 };
 
 const logoutUser = (req, res) => {
@@ -113,18 +112,18 @@ const getUserDetails = async (req, res) => {
 const getProfileData = async (req, res) => {
   try {
     const user = await userModal
-  .findOne({
-    username: req.session.passport.user,
-  })
-  .populate({ path: "posts" })
-  .populate({ path: "posts.userId" })
-  .populate({ path: "posts.comments" })
-  .populate({
-    path: "posts",
-    populate: {
-      path: "userId comments.userId",
-    },
-  });
+      .findOne({
+        username: req.session.passport.user,
+      })
+      .populate({ path: "posts" })
+      .populate({ path: "posts.userId" })
+      .populate({ path: "posts.comments" })
+      .populate({
+        path: "posts",
+        populate: {
+          path: "userId comments.userId",
+        },
+      });
 
     res.status(200).json({ user: user });
   } catch (error) {
