@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../stylesheets/Login.css";
 import { updateUser } from "../utility/authentication.utility";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import Loader from "./Loader/Loader";
 import {useCookies} from 'react-cookie'
@@ -9,7 +9,7 @@ import {useCookies} from 'react-cookie'
 const UpdateProfile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(['uid']);
+  const [cookies, _] = useCookies(['uid']);
 
   const navigate = useNavigate();
 

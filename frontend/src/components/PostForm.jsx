@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../stylesheets/postForm.css";
-import "../stylesheets/Login.css";
+import "../stylesheets/login.css";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";

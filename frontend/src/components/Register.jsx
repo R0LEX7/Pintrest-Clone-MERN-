@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import "../stylesheets/Login.css";
+import "../stylesheets/login.css";
 import { registerUser } from "../utility/authentication.utility";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";

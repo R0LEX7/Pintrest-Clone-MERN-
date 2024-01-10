@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, } from "react";
 
 import { useAuth } from "../Context/UserContext";
 import { loginUser } from "../utility/authentication.utility";
