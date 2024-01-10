@@ -8,16 +8,8 @@ const app = express();
 const { connect } = require("./connection.js");
 const userRouter = require("./routes/user.route.js");
 
-
-
-
 // middlewares
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URI, // Replace with your React app's URL
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use(express.json());
 connect();
@@ -25,17 +17,7 @@ connect();
 app.use(cookieParser());
 app.enable("trust proxy", 1);
 
-
-
 // Example in Express.js
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URI);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
-  next();
-});
-
 
 app.get("/", (req, res) => {
   res.send("hyy");
@@ -48,8 +30,6 @@ app.use("/user", userRouter);
 const postRouter = require("./routes/post.route.js");
 
 app.use("/post", postRouter);
-
-;
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`server listening on port http://localhost:${process.env.PORT}`);
