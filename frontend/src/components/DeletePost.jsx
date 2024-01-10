@@ -11,40 +11,42 @@ import {
 import { MdDeleteOutline } from "react-icons/md";
 import { toast, Toaster } from "react-hot-toast";
 import { deletePost } from "../utility/post.utility";
-import {useNavigation } from "react-router-dom"
+import { useNavigation } from "react-router-dom";
 import { useAuth } from "../Context/UserContext";
-const DeletePost = ({ post  }) => {
+import { useCookie } from "react-cookie";
+
+const DeletePost = ({ post }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [cookies, _] = useCookie([]);
   const navigate = useNavigation();
 
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const handleDelete = async () => {
-    if(user){
-        try {
-            const response = await deletePost(post._id);
-            console.log(response);
-            toast(response.message);
-            location.reload(true);
-          } catch (error) {
-            console.log(error);
-            toast.error(error);
-          }
-    }else {
-        navigate("/login")
+    if (user) {
+      try {
+        const response = await deletePost(post._id, cookies?.uid);
+        console.log(response);
+        toast(response.message);
+        location.reload(true);
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
+      }
+    } else {
+      navigate("/login");
     }
   };
 
   return (
     <div>
-        <Toaster/>
+      <Toaster />
       <button
         onClick={onOpen}
         className="absolute top-1 right-1 text-white bg-black int  btn px-1 z-10 mt-1 w-6 h-6 text-lg"
-    style={{
-        backgroundColor : "black"
-    }}
-        
+        style={{
+          backgroundColor: "black",
+        }}
       >
         <MdDeleteOutline />
       </button>
@@ -72,9 +74,9 @@ const DeletePost = ({ post  }) => {
                 <Button
                   color="primary"
                   className="text-white btn int"
-                  onPress={()=> {
-                    handleDelete()
-                    onClose()
+                  onPress={() => {
+                    handleDelete();
+                    onClose();
                   }}
                 >
                   Delete

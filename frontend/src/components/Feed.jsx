@@ -16,7 +16,7 @@ const breakPointColumnObj = {
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
-  const [cookies] = useCookies([]);
+  const [cookies, _] = useCookies([]);
   const [loading, setLoading] = useState(false);
 
   const getAllPosts = async () => {
