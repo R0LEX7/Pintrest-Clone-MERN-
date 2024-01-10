@@ -1,6 +1,6 @@
 /* The above code is a JavaScript file that contains several functions related to user authentication and user management.
 Here is a summary of what each function does: */
-const passport = require("passport");
+
 const userModal = require("../models/user.model");
 const validator = require("validator");
 const { uploadOnCloudinary } = require("../services/cloudinary.js");
@@ -21,8 +21,8 @@ const bcrypt = require("bcrypt");
  */
 const createUser = async (req, res) => {
   try {
-    const { username, email, fullName, password, profilePic } = req.body;
-
+    const { username, email, fullName, password } = req.body;
+    console.log(req.file);
     // Convert fields to lowercase
     const lowerUsername = username.trim().toLowerCase();
     const user = await userModal.findOne({ username: lowerUsername });
@@ -47,18 +47,23 @@ const createUser = async (req, res) => {
         .json({ error: "Password must be at least 8 characters long" });
     }
 
-
+    if (!req.file) {
+      return res.status(400).json({ error: "File is required" });
+    }
+    const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
+    if (!cloudinaryResponse) {
+      return res.status(500).json({ error: "Failed to upload to Cloudinary" });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userData = new userModal({
       username: lowerUsername,
       email: lowerEmail,
       fullName: lowerFullName,
-      profilePic: profilePic,
+      profilePic: cloudinaryResponse.secure_url,
       password: hashedPassword,
     });
     await userData.save();
-
 
     res.status(201).json({ message: `Welcome ${lowerUsername}`, userData });
   } catch (error) {
@@ -96,14 +101,16 @@ const loginUser = async (req, res, next) => {
     return res.status(401).json({ error: "Invalid username or password" });
   }
 
-  const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "1d",
-  });
+  const token = jwt.sign(
+    { username: user.username },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: "1d",
+    }
+  );
 
-    return res.status(200).json({ message: "Login successful", token });
+  return res.status(200).json({ message: "Login successful", token });
 };
-
-
 
 const getAllUser = async (req, res) => {
   try {
@@ -227,7 +234,7 @@ const updateUser = async (req, res) => {
  * middleware or returns a response with a status code and a JSON message.
  */
 const isLoggedIn = (req, res, next) => {
-  const authHeader = req.headers.authorization.split(" ")[1];
+  const authHeader = req.headers.authorization?.split(" ")[1];
   console.log(req.headers);
   if (!authHeader) {
     return res

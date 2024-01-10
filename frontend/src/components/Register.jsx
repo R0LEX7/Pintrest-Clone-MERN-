@@ -5,6 +5,7 @@ import { registerUser } from "../utility/authentication.utility";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "./Loader/Loader";
+import { useCookies } from "react-cookie";
 
 const Register = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -19,10 +20,14 @@ const Register = () => {
     fullName: "",
   });
 
+  const [_, setCookie] = useCookies([]);
+
   const handleRegister = async () => {
     try {
       setLoading(true);
-      await registerUser(userData, selectedImage);
+      const response = await registerUser(userData, selectedImage);
+
+      setCookie("uid", `Bearer ${response.token}`);
       navigate("/feed");
       toast.success(`Hii ${userData.username}`);
     } catch (error) {
@@ -58,7 +63,7 @@ const Register = () => {
       ) : (
         <div className="main">
           <div className="container">
-            <div className="content">
+            <form className="content" encType="multipart/formdata">
               <div className="flex">
                 <img
                   src="https://i.pinimg.com/originals/d3/d1/75/d3d175e560ae133f1ed5cd4ec173751a.png"
@@ -130,7 +135,7 @@ const Register = () => {
                   Already on Pinterest? <Link to="/login">Log in</Link>
                 </p>
               </footer>
-            </div>
+            </form>
           </div>
         </div>
       )}

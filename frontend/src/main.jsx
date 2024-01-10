@@ -13,6 +13,8 @@ import {
   UpdateProfile,
 } from "./index.js";
 import "./index.css";
+import { CookiesProvider } from 'react-cookie';
+
 import SingleCard from "./components/SingleCard.jsx";
 import { CommentProvider } from "./Context/CommentContext.jsx";
 
@@ -61,7 +63,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <CommentProvider>
       <NextUIProvider>
+      <CookiesProvider defaultSetOptions={{ path: '/' }}>
         <RouterProvider router={router} />
+        </CookiesProvider>
       </NextUIProvider>
     </CommentProvider>
   </React.StrictMode>

@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const auth_url = String(import.meta.env.VITE_AUTH_URI);
+const backendUri = String(import.meta.env.VITE_URI);
 
 // Create an instance of axios
-let ApiService = axios.create({
-  baseURL: auth_url,
+const ApiService = axios.create({
+  baseURL: backendUri,
   withCredentials: true,
   headers: {
     Accept: "application/json",
@@ -12,16 +12,18 @@ let ApiService = axios.create({
     "X-Requested-With": "XMLHttpRequest",
   },
 });
+const configFile = {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+};
 
 export const loginUser = async (username, password) => {
   try {
-    const response = await axios.post(
-      "https://pintrestclone-vqp3.onrender.com/user/login",
-      {
-        username: username.toLowerCase(),
-        password,
-      }
-    );
+    const response = await ApiService.post("/user/login", {
+      username: username.toLowerCase(),
+      password,
+    });
     console.log(response);
     return response.data;
   } catch (error) {
@@ -39,15 +41,9 @@ export const registerUser = async (userData, selectedImage) => {
     formData.append("password", userData.password);
     formData.append("profilePic", selectedImage);
 
-    const response = await axios.post(
-      "https://pintrestclone-vqp3.onrender.com/user/create",
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
-    await loginUser(userData.username, userData.password);
-
+    await ApiService.post("/user/create", formData, configFile);
+    const response = await loginUser(userData.username, userData.password);
+    return response;
     // Handle success, e.g., redirect to the login page
   } catch (error) {
     console.error(error.response?.data || error.message);
@@ -55,10 +51,11 @@ export const registerUser = async (userData, selectedImage) => {
   }
 };
 
-export const updateUser = async (formData) => {
+export const updateUser = async (formData, token) => {
   try {
-    const response = await ApiService.post("/update", formData, {
-      withCredentials: true,
+    const response = await ApiService.post("/user/update", formData, {
+      ...configFile,
+      headers: { ...configFile.headers, authorization: token },
     });
     // loginUser(response);
   } catch (error) {
@@ -66,26 +63,14 @@ export const updateUser = async (formData) => {
   }
 };
 
-export const getProfile = async () => {
+export const getProfile = async (token) => {
   try {
-    const response = await ApiService.get("/profile");
-
+    const response = await ApiService.get("/user/profile", {
+      headers: { authorization: token },
+    });
     return response.data;
   } catch (error) {
     console.log("error", error);
     throw error;
-  }
-};
-
-export const logout = async () => {
-  try {
-    const logoutuser = await axios.get(
-      "https://pintrestclone-vqp3.onrender.com/user/logout",
-      {
-        withCredentials: true,
-      }
-    );
-  } catch (error) {
-    console.log(error);
   }
 };

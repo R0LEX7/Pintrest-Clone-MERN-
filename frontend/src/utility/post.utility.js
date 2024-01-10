@@ -1,12 +1,12 @@
 import axios from "axios";
 import { getProfile } from "./authentication.utility";
 
-// const post_url = String(import.meta.env.VITE_AUTH_URI);
+const backendUri = String(import.meta.env.VITE_URI);
 
 // import axios from "axios";
 
 let ApiService = axios.create({
-  baseURL: "https://pintrestclone-vqp3.onrender.com",
+  baseURL: backendUri,
   withCredentials: true,
   headers: {
     Accept: "application/json",
@@ -21,9 +21,11 @@ const configFile = {
   },
 };
 
-export const getData = async () => {
+export const getData = async (token) => {
   try {
-    const response = await ApiService.get("/post/all_posts");
+    const response = await ApiService.get("/post/all_posts", {
+      headers: { authorization: token },
+    });
     return response?.data?.posts || null;
   } catch (error) {
     console.error(error);
@@ -31,13 +33,15 @@ export const getData = async () => {
   }
 };
 
-
-// ... (other functions remain unchanged)
-
-
-export const handleLike = async (postId) => {
+export const handleLike = async (postId, token) => {
   try {
-    const response = await ApiService.post("/like", { postId });
+    const response = await ApiService.post(
+      "/post/like",
+      { postId },
+      {
+        headers: { authorization: token },
+      }
+    );
     console.log("api called");
     return response?.data.likeArray;
   } catch (error) {
@@ -47,11 +51,17 @@ export const handleLike = async (postId) => {
   }
 };
 
-export const handleComment = async (postId, comment) => {
+export const handleComment = async (postId, comment, token) => {
   try {
     let text = comment.trim();
     if (text.length === 0) throw new Error("Please enter a comment");
-    const response = await ApiService.post("/comment", { postId, text });
+    const response = await ApiService.post(
+      "/post/comment",
+      { postId, text },
+      {
+        headers: { authorization: token },
+      }
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -60,35 +70,54 @@ export const handleComment = async (postId, comment) => {
   }
 };
 
-export const getSinglePost = async (id) => {
+export const getSinglePost = async (id, token) => {
   try {
-    const response = await ApiService.get("/get_post", {
-      params: {
-        id: id,
+    const response = await ApiService.get(
+      "/post/get_post",
+      {
+        params: {
+          id: id,
+        },
       },
-    });
+      {
+        headers: { authorization: token },
+      }
+    );
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-export const deletePost = async (postId) => {
+export const deletePost = async (postId, token) => {
   try {
-    const response = await ApiService.delete("/delete", {
-      params: {
-        postId,
+    const response = await ApiService.delete(
+      "/post/delete",
+      {
+        params: {
+          postId,
+        },
       },
-    });
+      {
+        headers: { authorization: token },
+      }
+    );
     return response;
   } catch (error) {
     throw error.response.data.message;
   }
 };
 
-export const createPost = async (formData) => {
+export const createPost = async (formData, token) => {
   try {
-    const response = await ApiService.post("/post/create", formData, configFile);
+    const response = await ApiService.post(
+      "/post/create",
+      formData,
+      {
+        ...configFile,
+        headers: { ...configFile.headers, authorization: token },
+      }
+    );
     return response;
   } catch (error) {
     console.log(error);

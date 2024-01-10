@@ -4,9 +4,12 @@ import { updateUser } from "../utility/authentication.utility";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import Loader from "./Loader/Loader";
+import {useCookies} from 'react-cookie'
+
 const UpdateProfile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['uid']);
 
   const navigate = useNavigate();
 
@@ -15,7 +18,7 @@ const UpdateProfile = () => {
     fullName: "",
   });
 
-  
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -27,7 +30,7 @@ const UpdateProfile = () => {
       formData.append("updateProfilePic", selectedImage);
 
       console.log(formData);
-      await updateUser(formData);
+      await updateUser(formData , cookies?.uid);
 
       toast.success("Profile updated");
     } catch (error) {

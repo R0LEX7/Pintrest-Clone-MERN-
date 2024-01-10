@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../stylesheets/postForm.css";
 import "../stylesheets/Login.css";
-
+import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { createPost } from "../utility/post.utility";
@@ -13,6 +13,7 @@ const PostForm = () => {
   const [postText, setPostText] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [cookies , _] = useCookies(["uid"]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -34,8 +35,8 @@ const PostForm = () => {
 
       formData.append("image", picture);
       formData.append("postText", postText);
-
-      const response = await createPost(formData);
+      console.log(cookies)
+      const response = await createPost(formData, cookies.uid);
       console.log(response);
       navigate("/feed");
       toast.success("Upload successful");

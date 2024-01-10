@@ -9,14 +9,14 @@ import {
 } from "@nextui-org/react";
 import useSinglePost from "../Custom Hooks/useSinglePost";
 import { Link } from "react-router-dom";
-
+import { useCookies } from "react-cookie";
 import { handleComment } from "../utility/post.utility";
 import { commentContext } from "../Context/CommentContext";
 
 const CommentModal = ({ id, onClose }) => {
   const { post } = useSinglePost({ id });
   const { comments, setComments } = useContext(commentContext);
-
+  const [cookies, _] = useCookies([]);
   const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const CommentModal = ({ id, onClose }) => {
   const submitComment = async () => {
     try {
       let comment = commentText.trim();
-      const response = await handleComment(post._id, comment);
+      const response = await handleComment(post._id, comment, cookies?.uid);
       setComments(response.comments);
       setCommentText("");
     } catch (error) {
@@ -42,7 +42,7 @@ const CommentModal = ({ id, onClose }) => {
       <ModalBody className="text-black w-full">
         {/* <Avatar src={post?.userId.profilePic} className="w-6 h-6 text-tiny"  /> */}
         <div className="flex flex-row gap-2 justify-start">
-          <Avatar src={post?.userId.profilePic} size="sm"/>
+          <Avatar src={post?.userId.profilePic} size="sm" />
           <span
             className="sm:text-[14px] text-sm w-[240px] "
             style={{ width: "230px", fontSize: "0.8rem" }}

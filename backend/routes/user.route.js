@@ -1,9 +1,7 @@
-// routes/user.route.js
+
 const express = require("express");
 const router = express.Router();
-const passport = require("passport");
-const localStrategy = require("passport-local");
-const userModel = require("../models/user.model");
+
 
 const upload = require("../services/multer");
 
@@ -17,7 +15,7 @@ const {
   updateUser,
 } = require("../controllers/user.controller");
 
-passport.use(new localStrategy(userModel.authenticate()));
+
 
 router.post("/create", upload.single("profilePic"), createUser);
 

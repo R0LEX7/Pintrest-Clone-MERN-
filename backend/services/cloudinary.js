@@ -2,7 +2,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
+  api_key: String(process.env.API_KEY),
   api_secret: process.env.API_SECRET,
 });
 
@@ -17,8 +17,11 @@ const uploadOnCloudinary = async (filePath) => {
       filePath,
       { resource_type: "image", public_id: publicId },
       function (error, result) {
-        fs.unlinkSync(filePath);
-        if (result) response = result;
+        if (error) console.log(error);
+        if (result) {
+          fs.unlinkSync(filePath);
+          response = result;
+        }
         console.log(result);
       }
     );

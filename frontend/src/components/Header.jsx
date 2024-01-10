@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/UserContext";
 import {
@@ -10,36 +10,34 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-import {toast , Toaster} from "react-hot-toast"
-
+import { toast, Toaster } from "react-hot-toast";
+import { useCookies } from "react-cookie";
 import "../stylesheets/header.css";
-import axios from "axios";
+
 import SideBar from "./SideBar";
-import { logout } from "../utility/authentication.utility";
+
 
 const Header = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
+  const [_ ,removeCookie] = useCookies([]);
 
   const handleLogout = async () => {
     try {
-      await logout();
-      toast.success("logout successfully")
+      removeCookie("uid");
+      toast.success("logout successfully");
       navigate("/login");
       setUser(null);
     } catch (error) {
       console.log(error);
-      toast.error("logout failed")
+      toast.error("logout failed");
       navigate("/login");
     }
   };
 
   return (
-    <Navbar
-      maxWidth="100%"
-      className="lg:px-4 gap-8 shadow-md justify-between"
-      maxWidth="full"
-    >
+    <Navbar maxWidth="100%" className="lg:px-4 gap-8 shadow-md justify-between">
+      <Toaster/>
       <NavbarContent>
         <NavbarContent>
           <SideBar propUser={user} logOut={handleLogout} />

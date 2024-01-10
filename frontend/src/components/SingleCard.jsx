@@ -1,14 +1,9 @@
-import React, { useEffect } from "react";
 import { Card, CardBody, Image, Button, Slider } from "@nextui-org/react";
 import { useParams } from "react-router-dom";
 import useSinglePost from "../Custom Hooks/useSinglePost";
-import { getSinglePost } from "../utility/post.utility";
 import { FaRegComment } from "react-icons/fa6";
 
-
-
 export default function SingleCard() {
-  const [liked, setLiked] = React.useState(false);
   const { id } = useParams();
   const { post } = useSinglePost({ id });
 
@@ -95,7 +90,7 @@ export default function SingleCard() {
                 variant="light"
               >
                 <FaRegComment />
-               {post.comments.length}
+                {post.comments.length}
               </Button>
             </div>
           </div>
