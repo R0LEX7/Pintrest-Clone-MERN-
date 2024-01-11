@@ -89,7 +89,8 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const lowerUsername = username.toLowerCase();
+  const lowerUsername = username.trim().toLowerCase();
+
 
   const user = await userModal.findOne({ username: lowerUsername });
 
@@ -237,7 +238,7 @@ const isLoggedIn = (req, res, next) => {
   if (!authHeader) {
     return res
       .status(401)
-      .json({ authenticated: false, message: "Invalid token" });
+      .json({ authenticated: false, message: "login please" });
   }
   const token = authHeader;
 
@@ -247,7 +248,7 @@ const isLoggedIn = (req, res, next) => {
     console.log(req.username);
     next();
   } catch (error) {
-    res.status(401).json({ authenticated: false, message: "Invalid token" });
+    res.status(401).json({ authenticated: false, message: "login please" });
   }
 };
 

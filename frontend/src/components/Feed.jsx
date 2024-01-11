@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import "react-masonry-css";
 import "../stylesheets/feed.css";
@@ -15,22 +15,21 @@ const Feed = () => {
   const [cookies, _] = useCookies([]);
   const [loading, setLoading] = useState(false);
 
-  const getAllPosts = async () => {
+  const getAllPosts = useCallback(async () => {
     try {
       setLoading(true);
       const AllPosts = await getData(cookies?.uid);
       setPosts(AllPosts);
     } catch (error) {
-      console.log(error);
       toast(error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [cookies?.uid]); // Include dependencies in the dependency array
 
   useEffect(() => {
     getAllPosts();
-  }, []);
+  }, [getAllPosts]);
 
   return (
     <>

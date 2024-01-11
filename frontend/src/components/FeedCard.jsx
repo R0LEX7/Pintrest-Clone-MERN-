@@ -31,7 +31,7 @@ const FeedCard = ({ props }) => {
     fetchUser();
   }, [fetchUser]);
 
-  const handleClick = async () => {
+  const handleClick = useCallback(async () => {
     try {
       if (user) {
         const updatedLikeArray = await handleLike(props._id, cookies?.uid);
@@ -40,14 +40,13 @@ const FeedCard = ({ props }) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [user, props._id, cookies?.uid]);
 
   return (
     <div className="gallery-item relative">
       <Card
         isPressable
         isFooterBlurred
-        onPress={handleClick}
         radius="md"
         className="border-none relative"
         maxWidth="full"

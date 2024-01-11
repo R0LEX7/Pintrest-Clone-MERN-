@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useAuth } from "../Context/UserContext";
 import { loginUser } from "../utility/authentication.utility";
@@ -16,7 +16,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [_, setCookie] = useCookies(["uid"]);
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
     try {
       setLoading(true);
       const response = await loginUser(username, password);
@@ -31,7 +31,7 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [username , password])
 
   return (
     <>

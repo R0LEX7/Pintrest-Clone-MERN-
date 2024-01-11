@@ -27,11 +27,11 @@ const DeletePost = ({ post }) => {
       try {
         const response = await deletePost(post._id, cookies?.uid);
         console.log(response);
-        toast(response.message);
+        toast.success(response.data.message);
         location.reload(true);
       } catch (error) {
         console.log(error);
-        toast.error(error);
+        toast.error(error || "Server error");
       }
     } else {
       navigate("/login");
