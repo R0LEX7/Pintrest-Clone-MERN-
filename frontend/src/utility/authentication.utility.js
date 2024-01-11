@@ -28,7 +28,7 @@ export const loginUser = async (username, password) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    throw error.response?.data?.message || "An error occurred";
+    throw error.response?.data?.error || "Invalid username or password";
   }
 };
 
@@ -47,7 +47,7 @@ export const registerUser = async (userData, selectedImage) => {
     // Handle success, e.g., redirect to the login page
   } catch (error) {
     console.error(error.response?.data || error.message);
-    throw error.response?.data || error.message || "An error occurred";
+    throw error.response?.data.error || error.message || "Invalid credentials";
   }
 };
 
@@ -59,7 +59,7 @@ export const updateUser = async (formData, token) => {
     });
     // loginUser(response);
   } catch (error) {
-    throw error.response?.data?.message || "An error occurred";
+    throw error.response?.data?.error || "An error occurred";
   }
 };
 
@@ -71,6 +71,6 @@ export const getProfile = async (token) => {
     return response.data;
   } catch (error) {
     console.log("error", error);
-    throw error;
+    throw error.response?.data?.error;
   }
 };

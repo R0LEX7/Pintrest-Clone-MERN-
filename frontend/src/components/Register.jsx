@@ -32,7 +32,7 @@ const Register = () => {
       toast.success(`Hii ${userData.username}`);
     } catch (error) {
       console.error("register failed:", error);
-      toast.error(`Error :${error.error}`);
+      toast.error(`Error :${error}`);
     } finally {
       setLoading(false);
     }
