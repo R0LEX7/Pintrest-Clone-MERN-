@@ -15,7 +15,6 @@ const useUserProfile = () => {
       try {
         setLoading(true);
         const data = await getProfile(cookies?.uid);
-        console.log(data);
         setUser(data.user);
       } catch (error) {
         console.log(error);
