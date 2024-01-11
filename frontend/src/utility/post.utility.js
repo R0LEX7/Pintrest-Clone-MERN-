@@ -94,7 +94,9 @@ export const deletePost = async (postId, token) => {
 
     const response = await ApiService.delete(`/post/delete/${postId}`, {
       headers: { authorization: token },
-
+      data : {
+        postId
+      }
     });
     return response;
   } catch (error) {

@@ -22,7 +22,7 @@ const bcrypt = require("bcrypt");
 const createUser = async (req, res) => {
   try {
     const { username, email, fullName, password } = req.body;
-    console.log(req.file);
+
     // Convert fields to lowercase
     const lowerUsername = username.trim().toLowerCase();
     const user = await userModal.findOne({ username: lowerUsername });
@@ -67,7 +67,7 @@ const createUser = async (req, res) => {
 
     res.status(201).json({ message: `Welcome ${lowerUsername}`, userData });
   } catch (error) {
-    console.log("Internal Server Error", error);
+
     res.status(500).json({ message: "Internal Server Error", error: error });
   }
 };
@@ -123,7 +123,7 @@ const getAllUser = async (req, res) => {
       success: newUser,
     });
   } catch (error) {
-    console.log("Internal Server Error", error);
+
     res.status(500).json({ message: "Internal Server Error", error: error });
   }
 };
@@ -138,7 +138,7 @@ const getUserDetails = async (req, res) => {
       user: user,
     });
   } catch (error) {
-    console.log("Internal Server Error", error);
+
     res.status(500).json({ message: "Internal Server Error", error: error });
   }
 };
@@ -161,7 +161,7 @@ const getProfileData = async (req, res) => {
 
     res.status(200).json({ user: user });
   } catch (error) {
-    console.log("Internal Server Error", error);
+
     res.status(500).json({ message: "Internal Server Error", error: error });
   }
 };
@@ -216,7 +216,7 @@ const updateUser = async (req, res) => {
       "check user data: ": updatedUserData,
     });
   } catch (error) {
-    console.log("Internal Server Error", error);
+
     res.status(500).json({ message: "Internal Server Error", error: error });
   }
 };
@@ -245,7 +245,7 @@ const isLoggedIn = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     req.username = decoded.username;
-    console.log(req.username);
+
     next();
   } catch (error) {
     res.status(401).json({ authenticated: false, message: "login please" });
