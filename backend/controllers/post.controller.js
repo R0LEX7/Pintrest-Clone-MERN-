@@ -205,7 +205,7 @@ const getSinglePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const { postId } = req.query;
+    const { postId } = req.params;
 
     const curr_User = await userModal.findOne({
       username: req.username,

@@ -91,17 +91,9 @@ export const getSinglePost = async (id, token) => {
 
 export const deletePost = async (postId, token) => {
   try {
-    const response = await ApiService.delete(
-      "/post/delete",
-      {
-        params: {
-          postId,
-        },
-      },
-      {
-        headers: { authorization: token },
-      }
-    );
+    const response = await ApiService.delete(`/post/delete/${postId}`, {
+      headers: { authorization: token },
+    });
     return response;
   } catch (error) {
     throw error.response.data.message;
@@ -110,14 +102,10 @@ export const deletePost = async (postId, token) => {
 
 export const createPost = async (formData, token) => {
   try {
-    const response = await ApiService.post(
-      "/post/create",
-      formData,
-      {
-        ...configFile,
-        headers: { ...configFile.headers, authorization: token },
-      }
-    );
+    const response = await ApiService.post("/post/create", formData, {
+      ...configFile,
+      headers: { ...configFile.headers, authorization: token },
+    });
     return response;
   } catch (error) {
     console.log(error);
