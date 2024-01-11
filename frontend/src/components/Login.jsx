@@ -4,8 +4,7 @@ import { useAuth } from "../Context/UserContext";
 import { loginUser } from "../utility/authentication.utility";
 import "../stylesheets/login.css";
 import { Link, useNavigate } from "react-router-dom";
-import toast, { Toaster } from 'react-hot-toast';
-import Loader from "./Loader/Loader";
+import toast from "./Loader/Loader";
 import {useCookies} from 'react-cookie'
 
 const Login = () => {
@@ -37,7 +36,7 @@ const Login = () => {
     <>
       {loading ? (<Loader/>) : (
         <div className="main">
-        <Toaster/>
+
           <div className="container">
             <div className="content flex">
               <img

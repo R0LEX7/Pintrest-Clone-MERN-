@@ -89,7 +89,9 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const user = await userModal.findOne({ username });
+  const lowerUsername = username.toLowerCase();
+
+  const user = await userModal.findOne({ username : lowerUsername });
 
   if (!user) {
     return res.status(401).json({ error: "Invalid username or password" });
@@ -186,7 +188,6 @@ const updateUser = async (req, res) => {
     const lowerFullName = fullName ? fullName.toLowerCase() : oldUser.fullName;
 
     const updatedUserData = {};
-    console.log(req.file);
     if (req.file) {
       const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
       if (!cloudinaryResponse) {
@@ -208,8 +209,6 @@ const updateUser = async (req, res) => {
         new: true,
       }
     );
-    console.log("check user data: " + updatedUserData);
-    console.log("updated user data: " + updatedUser);
     res.status(200).json({
       message: "Updated successfully",
       user: updatedUser,
@@ -235,7 +234,6 @@ const updateUser = async (req, res) => {
  */
 const isLoggedIn = (req, res, next) => {
   const authHeader = req.headers.authorization?.split(" ")[1];
-  console.log(req.headers);
   if (!authHeader) {
     return res
       .status(401)

@@ -3,7 +3,7 @@ import axios from "axios";
 import "../stylesheets/login.css";
 import { registerUser } from "../utility/authentication.utility";
 import { Link, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import Loader from "./Loader/Loader";
 import { useCookies } from "react-cookie";
 
@@ -56,8 +56,6 @@ const Register = () => {
 
   return (
     <>
-      <Toaster />
-
       {loading ? (
         <Loader />
       ) : (

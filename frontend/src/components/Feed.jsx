@@ -8,11 +8,7 @@ import { useCookies } from "react-cookie";
 import { getData } from "../utility/post.utility.js";
 import Loader from "./Loader/Loader.jsx";
 
-const breakPointColumnObj = {
-  default: 3,
-  1100: 2,
-  700: 1,
-};
+
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);

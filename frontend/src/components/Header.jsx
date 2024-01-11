@@ -10,7 +10,7 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-import { toast, Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import "../stylesheets/header.css";
 
@@ -37,7 +37,7 @@ const Header = () => {
 
   return (
     <Navbar maxWidth="full" className="lg:px-4 gap-8 shadow-md justify-between">
-      <Toaster/>
+
       <NavbarContent>
         <NavbarContent>
           <SideBar propUser={user} logOut={handleLogout} />

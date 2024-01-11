@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../stylesheets/login.css";
 import { updateUser } from "../utility/authentication.utility";
 import { useNavigate } from "react-router-dom";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import Loader from "./Loader/Loader";
 import {useCookies} from 'react-cookie'
 
@@ -64,7 +64,6 @@ const UpdateProfile = () => {
         <Loader />
       ) : (
         <div className="main">
-          <Toaster />
           <div className="container">
             <div className="content">
               <div className="flex">

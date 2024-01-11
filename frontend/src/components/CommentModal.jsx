@@ -8,7 +8,7 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import useSinglePost from "../Custom Hooks/useSinglePost";
-import { Link } from "react-router-dom";
+
 import { useCookies } from "react-cookie";
 import { handleComment } from "../utility/post.utility";
 import { commentContext } from "../Context/CommentContext";

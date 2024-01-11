@@ -50,7 +50,6 @@ const PostForm = () => {
 
   return (
     <>
-      <Toaster />
       {loading ? (
         <Loader />
       ) : (
