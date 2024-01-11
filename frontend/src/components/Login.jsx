@@ -1,42 +1,44 @@
-import { useState, } from "react";
+import { useState } from "react";
 
 import { useAuth } from "../Context/UserContext";
 import { loginUser } from "../utility/authentication.utility";
 import "../stylesheets/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "./Loader/Loader";
-import {useCookies} from 'react-cookie'
+import { useCookies } from "react-cookie";
+import Loader from "./Loader/Loader";
 
 const Login = () => {
-  const [username, setUsername] = useState("");3
+  const [username, setUsername] = useState("");
+  3;
   const [password, setPassword] = useState("");
-  const { setUser, setError, setLoading  , loading} = useAuth();
+  const { setUser, setError, setLoading, loading } = useAuth();
   const navigate = useNavigate();
-  const [_ , setCookie] = useCookies(['uid']);
+  const [_, setCookie] = useCookies(["uid"]);
 
   const handleLogin = async () => {
     try {
       setLoading(true);
       const response = await loginUser(username, password);
-      setCookie("uid" , `Bearer ${response.token}`)
+      setCookie("uid", `Bearer ${response.token}`);
       setUser(response.user);
-      toast.success(`Hii ${username}`)
+      toast.success(`Hii ${username}`);
       navigate("/feed");
     } catch (error) {
       setError("Invalid username or password"); // Display a meaningful error message
       console.error("Login failed:", error);
-      toast.error(`Error :${error}`)
+      toast.error(`Error :${error}`);
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
     <>
-      {loading ? (<Loader/>) : (
+      {loading ? (
+        <Loader />
+      ) : (
         <div className="main">
-
           <div className="container">
             <div className="content flex">
               <img
