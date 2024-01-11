@@ -91,7 +91,7 @@ const loginUser = async (req, res, next) => {
 
   const lowerUsername = username.toLowerCase();
 
-  const user = await userModal.findOne({ username : lowerUsername });
+  const user = await userModal.findOne({ username: lowerUsername });
 
   if (!user) {
     return res.status(401).json({ error: "Invalid username or password" });
@@ -111,7 +111,7 @@ const loginUser = async (req, res, next) => {
     }
   );
 
-  return res.status(200).json({ message: "Login successful", token });
+  return res.status(200).json({ message: "Login successful", token, user });
 };
 
 const getAllUser = async (req, res) => {
