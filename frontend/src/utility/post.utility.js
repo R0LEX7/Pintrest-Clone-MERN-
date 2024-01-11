@@ -92,7 +92,7 @@ export const getSinglePost = async (id, token) => {
 export const deletePost = async (postId, token) => {
   try {
 
-    const response = await ApiService.delete(`/post/delete/${postId}`, {
+    const response = await ApiService.delete(`/post/delete/`, {
       headers: { authorization: token },
       data : {
         postId
