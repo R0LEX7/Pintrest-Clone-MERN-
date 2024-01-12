@@ -50,16 +50,15 @@ const FeedCard = ({ props }) => {
   return (
     <div className="gallery-item relative">
       <Card
-
+        isPressable
         isFooterBlurred
         radius="md"
         className="border-none relative"
         maxWidth="full"
       >
         <Image
-          alt="Woman listing to music"
+          alt={props?.image}
           className="object-cover"
-          // height={200}
           src={props?.image}
 
           // width={200}
@@ -87,7 +86,7 @@ const FeedCard = ({ props }) => {
               color="default"
               radius="lg"
               size="sm"
-              onClick={handleDownload}
+              onClick={handleClick}
             >
               {likeArr.includes(user?.username) ? <GoHeartFill /> : <GoHeart />}
               {likeArr.length > 0 && likeArr.length}
