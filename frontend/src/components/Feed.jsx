@@ -1,4 +1,4 @@
-import { useEffect, useState , useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import "react-masonry-css";
 import "../stylesheets/feed.css";
@@ -7,7 +7,6 @@ import { useCookies } from "react-cookie";
 
 import { getData } from "../utility/post.utility.js";
 import Loader from "./Loader/Loader.jsx";
-
 
 
 const Feed = () => {
@@ -27,8 +26,11 @@ const Feed = () => {
     }
   }, [cookies?.uid]); // Include dependencies in the dependency array
 
+
+
   useEffect(() => {
     getAllPosts();
+
   }, [getAllPosts]);
 
   return (

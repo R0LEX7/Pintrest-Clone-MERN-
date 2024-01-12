@@ -9,7 +9,10 @@ import { Card, CardFooter, Image, Button, Avatar } from "@nextui-org/react";
 import { Modal, useDisclosure, ModalContent } from "@nextui-org/react";
 import { FaRegComment } from "react-icons/fa6";
 import CommentModal from "./CommentModal";
-import DeletePost from "./DeletePost";
+
+
+import { handleDownload } from "../utility/post.utility";
+import DownloadPost from "./Download";
 
 const FeedCard = ({ props }) => {
   const [user, setUser] = useState(null);
@@ -42,10 +45,12 @@ const FeedCard = ({ props }) => {
     }
   }, [user, props._id, cookies?.uid]);
 
+
+
   return (
     <div className="gallery-item relative">
       <Card
-        isPressable
+
         isFooterBlurred
         radius="md"
         className="border-none relative"
@@ -64,7 +69,8 @@ const FeedCard = ({ props }) => {
           className="absolute top-1 left-2 z-10 mt-1 w-6 h-6 text-tiny"
           src={props?.userId.profilePic}
         />
-        {user?._id === props?.userId._id && <DeletePost post={props} />}
+        <DownloadPost post={props}/>
+
         <CardFooter
           className="h-8  justify-between  w-full flex-row before:bg-white/30 border-white/20 border-1 overflow-hidden py-1 absolute  bottom-0 mb-0 mx-1
        shadow-small ml-1 z-10"
@@ -81,7 +87,7 @@ const FeedCard = ({ props }) => {
               color="default"
               radius="lg"
               size="sm"
-              onClick={handleClick}
+              onClick={handleDownload}
             >
               {likeArr.includes(user?.username) ? <GoHeartFill /> : <GoHeart />}
               {likeArr.length > 0 && likeArr.length}

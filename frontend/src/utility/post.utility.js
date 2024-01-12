@@ -116,3 +116,19 @@ export const createPost = async (formData, token) => {
     throw error.response.data.message;
   }
 };
+
+export const handleDownload = async (post) => {
+  try {
+    const response = await fetch(post?.image);
+    const blob = await response.blob();
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${Date.now()}.jpg`; // You can customize the downloaded file name
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error downloading image:", error);
+  }
+};
