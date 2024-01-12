@@ -15,9 +15,9 @@ const { isLoggedIn } = require("../controllers/user.controller");
 
 router.post("/create", isLoggedIn, upload.single("image"), createPost);
 router.get("/all_posts", isLoggedIn, getAllPosts);
-router.get("/is_liked", isLiked);
+router.get("/is_liked",isLoggedIn , isLiked);
 router.get("/get_post", getSinglePost);
-router.delete("/delete" , deletePost);
+router.delete("/delete" ,isLoggedIn, deletePost);
 router.post("/like", isLoggedIn, handleLike);
 router.post("/comment", isLoggedIn, handleComment);
 

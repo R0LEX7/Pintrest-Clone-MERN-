@@ -14,7 +14,8 @@ const createPost = async (req, res) => {
     // if cloudinary response found
     if (cloudinaryResponse) {
       const { postText } = req.body;
-      if(!postText || postText.trim().length === 0) return res.status(400).json({ message: "Caption is required" });
+      if (!postText || postText.trim().length === 0)
+        return res.status(400).json({ message: "Caption is required" });
       const user = await userModal.findOne({
         username: req.username,
       });
@@ -38,7 +39,6 @@ const createPost = async (req, res) => {
         .json({ message: "Failed to upload to Cloudinary" });
     }
   } catch (error) {
-
     return res
       .status(500)
       .json({ message: "Internal Server Error", error: error });
@@ -58,7 +58,7 @@ const getAllPosts = async (req, res) => {
     console.log("Internal error: " + error);
     return res.status(400).json({
       success: false,
-      message : "Internal error ",
+      message: "Internal error ",
       error: error.message,
     });
   }
@@ -204,7 +204,7 @@ const getSinglePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    console.log(req.body)
+    console.log(req.username);
     const { postId } = req.body;
 
     const curr_User = await userModal.findOne({
@@ -216,6 +216,7 @@ const deletePost = async (req, res) => {
         success: false,
         message: "post not found",
       });
+    console.log({ user: curr_User, post: post });
     if (curr_User._id.equals(post.userId._id)) {
       const deletePost = await postModal.findByIdAndDelete(postId);
 
@@ -237,7 +238,7 @@ const deletePost = async (req, res) => {
         .json({ message: "You do not have permission to delete" });
     }
   } catch (error) {
-
+    console.log(error);
     return res
       .status(501)
       .json({ success: false, message: "Internal server error", error: error });
